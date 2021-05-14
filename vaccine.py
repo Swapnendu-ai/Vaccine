@@ -2,6 +2,7 @@ import requests
 import time
 from datetime import date, datetime
 from playsound import playsound
+import json
 
 URL = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/"
 BY_PIN = "calendarByPin"
@@ -40,17 +41,22 @@ while True:
     if response.status_code == 200:
         data = response.json()
         found = False
+        centerFound = None
         for center in data["centers"]:
             for session in center["sessions"]:
                 found |= age >= session["min_age_limit"] and session["available_capacity"]
+            if found:
+                centerFound = {center["name"]:center["sessions"]}
+            # print(age,center)
         if found:
+            print(f"VACCINE FOUND IN {query['pincode']} {json.dumps(centerFound,indent=4)}")
             while True:
                 try:
                     playsound("mixkit-arcade-retro-game-over-213.wav")
                 except:
                     print("\a")
         else:
-            print(f"No vaccinces available in {query['pincode']} at {datetime.now()}")
+            print(f"No vaccinces available in {query['pincode']} at {datetime.now()}".split('.')[0])
     time.sleep(4)
 # print(data.text)
     # time.sleep(5)
