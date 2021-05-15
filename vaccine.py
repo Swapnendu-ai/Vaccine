@@ -28,35 +28,40 @@ currentDate = date.today()
 query = {
     "date" : f"{currentDate.day}-{currentDate.month}-{currentDate.year}"
 }
-pincodes = []
-numberOfPincodes = myInput("How many pincodes do you wanna check?","Please enter a number",lambda x : int(x))
-for i in range(numberOfPincodes):
-    pincodes.append(myInput(f"Enter pincode {i+1}","Your pincode is not a number lol",lambda x : str(int(x))))
-age = myInput("Enter your age","Your age is not a number lol",lambda x : int(x))
+pincodes = [831001,831003,831004,831011]
+# numberOfPincodes = myInput("How many pincodes do you wanna check?","Please enter a number",lambda x : int(x))
+# for i in range(numberOfPincodes):
+#     pincodes.append(myInput(f"Enter pincode {i+1}","Your pincode is not a number lol",lambda x : str(int(x))))
+age = 23# myInput("Enter your age","Your age is not a number lol",lambda x : int(x))
 run = 0
 while True:
     query["pincode"] = pincodes[run%len(pincodes)]
     run += 1
-    response = requests.get(placeQuery(URL+BY_PIN,query),headers=HEADER)
-    if response.status_code == 200:
-        data = response.json()
-        found = False
-        centerFound = None
-        for center in data["centers"]:
-            for session in center["sessions"]:
-                found |= age >= session["min_age_limit"] and session["available_capacity"]
+    try:
+        response = requests.get(placeQuery(URL+BY_PIN,query),headers=HEADER)
+        if response.status_code == 200:
+            data = response.json()
+            found = False
+            centerFound = None
+            for center in data["centers"]:
+                for session in center["sessions"]:
+                    found |= age >= session["min_age_limit"] and session["available_capacity_dose1"] > 0
+                if found and centerFound is None:
+                    centerFound = {center["name"]:center["sessions"]}
+                # print(age,center)
             if found:
-                centerFound = {center["name"]:center["sessions"]}
-            # print(age,center)
-        if found:
-            print(f"VACCINE FOUND IN {query['pincode']} {json.dumps(centerFound,indent=4)}")
-            while True:
-                try:
-                    playsound("mixkit-arcade-retro-game-over-213.wav")
-                except:
-                    print("\a")
-        else:
-            print(f"No vaccinces available in {query['pincode']} at {datetime.now()}".split('.')[0])
+                import webbrowser
+                webbrowser.open("https://selfregistration.cowin.gov.in/")
+                while True:
+                    print(f"VACCINE FOUND IN {query['pincode']} {json.dumps(centerFound,indent=4)}")
+                    try:
+                        playsound("mixkit-arcade-retro-game-over-213.wav")
+                    except:
+                        print("\a")
+            else:
+                print(f"No vaccinces available in {query['pincode']} at {datetime.now()}".split('.')[0])
+    except:
+        print("Could not make a request. Please check your internet connection \a")
     time.sleep(4)
 # print(data.text)
     # time.sleep(5)
