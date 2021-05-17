@@ -11,7 +11,7 @@
  Save the file.
  Double click on the file to run it.
  
- #Features
+##Features
  - It will sound an alarm when there is vaccine available
  - It will print the pincode of the location (at the top) where it is available along with other data. The pincode will be at the top.
  - It will open the cowin portal. I recommend you familiarize yourself with the portal and register yourself before hand. This way you can quickly book an appointment as soon as there is an alarm.
