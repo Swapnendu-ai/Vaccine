@@ -28,7 +28,7 @@ currentDate = date.today()
 query = {
     "date" : f"{currentDate.day}-{currentDate.month}-{currentDate.year}"
 }
-pincodes = [831001,831003,831004,831011]
+pincodes = [831001,831003,831004,831011,831012,831013]
 # numberOfPincodes = myInput("How many pincodes do you wanna check?","Please enter a number",lambda x : int(x))
 # for i in range(numberOfPincodes):
 #     pincodes.append(myInput(f"Enter pincode {i+1}","Your pincode is not a number lol",lambda x : str(int(x))))
@@ -45,7 +45,7 @@ while True:
             centerFound = None
             for center in data["centers"]:
                 for session in center["sessions"]:
-                    found |= age >= session["min_age_limit"] and session["available_capacity_dose1"] > 0
+                    found |= age >= session["min_age_limit"] and session["available_capacity_dose1"] > 1
                 if found and centerFound is None:
                     centerFound = {center["name"]:center["sessions"]}
                 # print(age,center)
